@@ -1,3 +1,8 @@
+"""Case-study #10 Refueling analysis
+Developers:
+Турчинович М. (90%), Зубарева Т. (40%) , Костылев М. (39%)
+"""
+
 
 import ru_local
 import math
@@ -9,14 +14,14 @@ import datetime
 file = open('input.txt', encoding='utf-8')
 azs = open('azs.txt', encoding='utf-8')
 
-price = {'АИ-80': 32, 'АИ-92': 46, 'АИ-95': 49, 'АИ-98': 59} #цены на бензин
-petrol_with_machine = {} #словарь бенизн + номера автоматов
-machine_with_petrol = {} #словарь номера автомата + бензины
-machine_with_max_quantity = {} #словарь с номером автомата + макс очередь
-departure_time = {} #словарь с данными отъезда
-arrival_time = {} #словарь с данными приезда
-quantity_people_near_machine = {} #словарь с количество людей возле автомата в данный момент
-cars_near_the_machine = {} #время приезда + номер автомата
+price = {ru_local.a80: 32, ru_local.a92: 46, ru_local.a95: 49, ru_local.a98: 59} #petrol prices
+petrol_with_machine = {} #dictionary petrol and petstop number
+machine_with_petrol = {} #dictionary petstop number and petrols
+machine_with_max_quantity = {} #dictionary petstop number and max queue
+departure_time = {} #dictionary with time of leaving
+arrival_time = {} #dictionary with time of arriving
+quantity_people_near_machine = {} #dicitionary with people at petrol right now
+cars_near_the_machine = {} #time of arrining + petrol number
 the_number_of_cars_left = 0
 amount_of_petrol = {}
 
@@ -27,7 +32,7 @@ for line in azs:
     machine = data_input[0]
     max_quantity = data_input[1]
     petrols = list(data_input[2:])
-    for petrol in petrols:  # создаёт словарь с бензином и какие колонки есть
+    for petrol in petrols:  #makes the dictionary with petrol and petstops
         if petrol not in petrol_with_machine:
             petrol_with_machine[petrol] = [int(machine)]
         else:
@@ -40,8 +45,8 @@ for line in azs:
         if petrol not in amount_of_petrol:
             amount_of_petrol[petrol] = 0
 
-    machine_with_max_quantity[int(machine)] = int(max_quantity) #создаёт словарь словарь с номером автомата + макс очередь
-    quantity_people_near_machine[int(machine)] = 0 #создает словарь с номеромом автомата + количество людей сейчас
+    machine_with_max_quantity[int(machine)] = int(max_quantity) #makes the dictionary with petstop number and max queue
+    quantity_people_near_machine[int(machine)] = 0 #makes the dictionary with petstop number and number of people now
 
 
 for line in file:
@@ -65,12 +70,12 @@ main_time = datetime.timedelta(hours=0, minutes=1)
 while main_time != datetime.timedelta(hours=24, minutes=0):
     if str(main_time)[:-3] in departure_time:
         quantity_people_near_machine[cars_near_the_machine[departure_time[str(main_time)[:-3]][0]]] -= 1
-        print('В', str(main_time)[:-3], 'клиент', departure_time[str(main_time)[:-3]][0],
+        print(ru_local.ins, str(main_time)[:-3], ru_local.client, departure_time[str(main_time)[:-3]][0],
               departure_time[str(main_time)[:-3]][1], departure_time[str(main_time)[:-3]][2],
-              departure_time[str(main_time)[:-3]][3], 'заправил свой автомобиль и покинул АЗС')
+              departure_time[str(main_time)[:-3]][3], ru_local.leave)
         for i in range(len(machine_with_max_quantity)):
-            print('Автомат №', i + 1, ' ', ' максимальная очередь: ', machine_with_max_quantity[i + 1],
-                  ' Марки бензина: ', ', '.join(machine_with_petrol[i + 1]), ' ', ' -> ',
+            print(ru_local.leave, i + 1, ' ', ru_local.max_qu, machine_with_max_quantity[i + 1],
+                  ru_local.st_oil, ', '.join(machine_with_petrol[i + 1]), ' ', ' -> ',
                   '*' * quantity_people_near_machine[i + 1], sep='')
 
     if str(main_time)[:-3] in arrival_time:
@@ -83,19 +88,21 @@ while main_time != datetime.timedelta(hours=24, minutes=0):
         while i != (len(petrol_with_machine[arrival_time[str(main_time)[:-3]][1]])):
             if quantity_people_near_machine[petrol_with_machine[arrival_time[str(main_time)[:-3]][1]][i]] !=\
                     machine_with_max_quantity[petrol_with_machine[arrival_time[str(main_time)[:-3]][1]][i]]:
-                if quantity_machine > quantity_people_near_machine[petrol_with_machine[arrival_time[str(main_time)[:-3]][1]][i]]:
+                if quantity_machine > quantity_people_near_machine[petrol_with_machine[arrival_time[str(main_time)\
+                        [:-3]][1]][i]]:
                     machine = petrol_with_machine[arrival_time[str(main_time)[:-3]][1]][i]
-                    quantity_machine = quantity_people_near_machine[petrol_with_machine[arrival_time[str(main_time)[:-3]][1]][i]]
+                    quantity_machine = quantity_people_near_machine[petrol_with_machine[arrival_time[str(main_time)\
+                        [:-3]][1]][i]]
 
             i += 1
 
         if machine == 0:
-            print('В', str(main_time)[:-3], 'новый клиент:', arrival_time[str(main_time)[:-3]][0],
+            print(ru_local.ins, str(main_time)[:-3], ru_local.new_cl, arrival_time[str(main_time)[:-3]][0],
                   arrival_time[str(main_time)[:-3]][1], arrival_time[str(main_time)[:-3]][2],
-                  arrival_time[str(main_time)[:-3]][3], 'не смог заправить свой автомобиль и покинул АЗС')
+                  arrival_time[str(main_time)[:-3]][3], ru_local.cant)
             for i in range(len(machine_with_max_quantity)):
-                print('Автомат №', i + 1, ' ', ' максимальная очередь: ', machine_with_max_quantity[i + 1],
-                      ' Марки бензина: ', ', '.join(machine_with_petrol[i + 1]), ' ', ' -> ',
+                print(ru_local.aut, i + 1, ' ', ru_local.max_qu, machine_with_max_quantity[i + 1],
+                      ru_local.st_oil, ', '.join(machine_with_petrol[i + 1]), ' ', ' -> ',
                       '*' * quantity_people_near_machine[i + 1], sep='')
             the_number_of_cars_left += 1
 
@@ -104,17 +111,20 @@ while main_time != datetime.timedelta(hours=24, minutes=0):
             cars_near_the_machine[str(main_time)[:-3]] = machine
             quantity_people_near_machine[machine] += 1
 
-            if str(main_time + datetime.timedelta(hours=0, minutes=(arrival_time[str(main_time)[:-3]][3])))[:-3] not in departure_time:
-                departure_time[str(main_time + datetime.timedelta(hours=0,minutes=(arrival_time[str(main_time)[:-3]][3])))[:-3]] = arrival_time[str(main_time)[:-3]]
+            if str(main_time + datetime.timedelta(hours=0, minutes=(arrival_time[str(main_time)[:-3]][3])))[:-3] \
+                    not in departure_time:
+                departure_time[str(main_time + datetime.timedelta(hours=0,minutes=(arrival_time[str(main_time)\
+                    [:-3]][3])))[:-3]] = arrival_time[str(main_time)[:-3]]
             else:
-                departure_time[str(main_time + datetime.timedelta(hours=0, minutes=(arrival_time[str(main_time)[:-3]][3])))[:-3]].append(arrival_time[str(main_time)[:-3]])
+                departure_time[str(main_time + datetime.timedelta(hours=0, minutes=(arrival_time[str(main_time)\
+                    [:-3]][3])))[:-3]].append(arrival_time[str(main_time)[:-3]])
 
-            print('В ', str(main_time)[:-3], ' ', 'новый клиент ', arrival_time[str(main_time)[:-3]][0], ' ',
+            print('В ', str(main_time)[:-3], ' ', ru_local.new_cl, arrival_time[str(main_time)[:-3]][0], ' ',
                   arrival_time[str(main_time)[:-3]][1], ' ', arrival_time[str(main_time)[:-3]][2], ' ',
-                  arrival_time[str(main_time)[:-3]][3], ' ', 'встал в очередь к автомату №', machine, sep='')
+                  arrival_time[str(main_time)[:-3]][3], ' ', ru_local.get, machine, sep='')
             for i in range(len(machine_with_max_quantity)):
-                print('Автомат №', i + 1, ' ', ' максимальная очередь: ', machine_with_max_quantity[i+1],
-                      ' Марки бензина: ', ', '.join(machine_with_petrol[i + 1]), ' ', ' -> ',
+                print(ru_local.aut, i + 1, ' ', ru_local.max_qu, machine_with_max_quantity[i+1],
+                      ru_local.st_oil, ', '.join(machine_with_petrol[i + 1]), ' ', ' -> ',
                       '*' * quantity_people_near_machine[i+1], sep='')
 
             amount_of_petrol[arrival_time[str(main_time)[:-3]][1]] += int(arrival_time[str(main_time)[:-3]][2])
@@ -124,10 +134,10 @@ while main_time != datetime.timedelta(hours=24, minutes=0):
 print()
 sum_petrols = 0
 for i in amount_of_petrol:
-    print('Бензина по марке', i, 'продано', amount_of_petrol[i], 'л')
+    print(ru_local.oil_st, i, ru_local.sell, amount_of_petrol[i], ru_local.litr)
     sum_petrols += amount_of_petrol[i] * price[i]
 print()
-print('Общая сумма продаж за сутки равна', sum_petrols, 'руб.')
+print(ru_local.total_rate, sum_petrols, ru_local.price)
 print()
-print('Количество клиентов, которые покинули АЗС не заправив автомобиль из-за «скопившейся» очереди:',
+print(ru_local.numb_cl,
       the_number_of_cars_left)
