@@ -48,7 +48,7 @@ for line in file:
     time, liter, petrol = line.split()
     hours_in, minutes_in = map(int, time.split(':'))
     time = str(datetime.timedelta(hours=hours_in, minutes=minutes_in))[:-3]
-    if int(liter) >= 20:
+    if int(liter) > 10:
         refueling_time = math.ceil(int(liter) / 10) + random.randint(-1, 1)
     else:
         refueling_time = math.ceil(int(liter) / 10) + random.randint(0, 1)
@@ -105,7 +105,7 @@ while main_time != datetime.timedelta(hours=24, minutes=0):
             quantity_people_near_machine[machine] += 1
 
             if str(main_time + datetime.timedelta(hours=0, minutes=(arrival_time[str(main_time)[:-3]][3])))[:-3] not in departure_time:
-                departure_time[str(main_time + datetime.timedelta(hours=0, minutes=(arrival_time[str(main_time)[:-3]][3])))[:-3]] = arrival_time[str(main_time)[:-3]]
+                departure_time[str(main_time + datetime.timedelta(hours=0,minutes=(arrival_time[str(main_time)[:-3]][3])))[:-3]] = arrival_time[str(main_time)[:-3]]
             else:
                 departure_time[str(main_time + datetime.timedelta(hours=0, minutes=(arrival_time[str(main_time)[:-3]][3])))[:-3]].append(arrival_time[str(main_time)[:-3]])
 
